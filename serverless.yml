@@ -1,0 +1,434 @@
+org: testingdynamo
+
+service: sensor-data
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - timestream:WriteRecords
+        - timestream:Select
+        - timestream:DescribeEndpoints
+        - timestream:DescribeTable
+        - timestream:ListTables
+      Resource:
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:COMPRESSOR_AMPS_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:COND_FAN_AMPS_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:LIQUID_LINE_PRESSURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:LIQUID_LINE_TEMPERATURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:RETURN_AIR_CO2_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:RETURN_AIR_HUMIDITY_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:RETURN_AIR_TEMPERATURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SPACE_CO2_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SPACE_HUMIDITY_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SPACE_TEMPERATURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SUCTION_LINE_PRESSURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SUCTION_LINE_TEMPERATURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SUPPLY_AIR_CO2_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SUPPLY_AIR_FAN_AMPS_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SUPPLY_AIR_HUMIDITY_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:SUPPLY_AIR_TEMPERATURE_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:VIBRATION_SENSOR_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase/table/${env:LOG_DATA_TABLE_NAME}"
+        - "arn:aws:timestream:${self:provider.region}:*:database/SensorDatabase"
+        - "*"
+
+functions:
+  ############################################COMPRESSOR_AMPS###########################################################
+  store_compressor_amps_data:
+    handler: handlers.compressor_amps.store_compressor_amps
+    events:
+      - httpApi:
+          path: /compressor_amps/data
+          method: POST
+
+  get_vibration_data:
+    handler: handlers.compressor_amps.get_compressor_amps
+    events:
+      - httpApi:
+          path: /compressor_amps/data
+          method: GET
+
+  options_compressor_amps_data:
+    handler: handlers.common.options_handler
+    events:
+      - httpApi:
+          path: /compressor_amps/data
+          method: OPTIONS
+
+  ############################################COND_FAN_AMPS#############################################################
+  store_cond_fan_amps_data:
+    handler: handlers.cond_fan_amps.store_cond_fan_amps
+    events:
+      - httpApi:
+          path: /cond_fan_amps/data
+          method: POST
+
+  get_cond_fan_amps_data:
+    handler: handlers.cond_fan_amps.get_cond_fan_amps
+    events:
+      - httpApi:
+          path: /cond_fan_amps/data
+          method: GET
+
+  options_cond_fan_amps_data:
+    handler: handlers.common.options_handler
+    events:
+      - httpApi:
+          path: /cond_fan_amps/data
+          method: OPTIONS
+
+  ############################################LIQUID_LINE_PRESSURE######################################################
+  store_liquid_line_pressure_data:
+    handler: handlers.liquid_line_pressure.store_liquid_line_pressure
+    events:
+      - httpApi:
+          path: /liquid_line_pressure/data
+          method: POST
+
+  get_status_data:
+    handler: handlers.liquid_line_pressure.get_liquid_line_pressure
+    events:
+      - httpApi:
+          path: /liquid_line_pressure/data
+          method: GET
+
+  options_liquid_line_pressure_data:
+    handler: handlers.common.options_handler
+    events:
+      - httpApi:
+          path: /liquid_line_pressure/data
+          method: OPTIONS
+
+  ############################################LIQUID_LINE_TEMPERATURE###################################################
+  store_amps_data:
+    handler: handlers.liquid_line_pressure.store_liquid_line_temperature
+    events:
+      - httpApi:
+          path: /liquid_line_temperature/data
+          method: POST
+
+  get_amps_data:
+    handler: handlers.liquid_line_pressure.store_liquid_line_temperature
+    events:
+      - httpApi:
+          path: /liquid_line_temperature/data
+          method: GET
+
+  options_liquid_line_temperature_data:
+    handler: handlers.common.options_handler
+    events:
+      - httpApi:
+          path: /liquid_line_temperature/data
+          method: OPTIONS
+
+  ############################################LOG_DATA##################################################################
+  store_log_data:
+    handler: handlers.log_data.get_log_data
+    events:
+      - httpApi:
+          path: /log_data/data
+          method: GET
+
+  options_log_data:
+    handler: handlers.common.options_handler
+    events:
+      - httpApi:
+          path: /log_data/data
+          method: OPTIONS
+
+    ############################################RETURN_AIR_CO2##########################################################
+    store_return_air_co2_data:
+      handler: handlers.return_air_co2.store_return_air_co2
+      events:
+        - httpApi:
+            path: /return_air_co2/data
+            method: POST
+
+    get_return_air_co2_data:
+        handler: handlers.return_air_co2.get_return_air_co2
+        events:
+            - httpApi:
+                path: /return_air_co2/data
+                method: GET
+
+    options_return_air_co2_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /return_air_co2/data
+                method: OPTIONS
+
+    ############################################RETURN_AIR_HUMIDITY######################################################
+    store_return_air_humidity_data:
+        handler: handlers.return_air_humidity.store_return_air_humidity
+        events:
+            - httpApi:
+                path: /return_air_humidity/data
+                method: POST
+
+    get_return_air_humidity_data:
+        handler: handlers.return_air_humidity.get_return_air_humidity
+        events:
+            - httpApi:
+                path: /return_air_humidity/data
+                method: GET
+
+    options_return_air_humidity_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /return_air_humidity/data
+                method: OPTIONS
+
+    ############################################RETURN_AIR_TEMPERATURE##################################################
+    store_return_air_temperature_data:
+        handler: handlers.return_air_temperature.store_return_air_temperature
+        events:
+            - httpApi:
+                path: /return_air_temperature/data
+                method: POST
+
+    get_return_air_temperature_data:
+        handler: handlers.return_air_temperature.get_return_air_temperature
+        events:
+            - httpApi:
+                path: /return_air_temperature/data
+                method: GET
+
+    options_return_air_temperature_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /return_air_temperature/data
+                method: OPTIONS
+
+    ############################################SPACE_CO2###############################################################
+    store_space_co2_data:
+        handler: handlers.space_co2.store_space_co2
+        events:
+            - httpApi:
+                path: /space_co2/data
+                method: POST
+
+    get_space_co2_data:
+        handler: handlers.space_co2.get_space_co2
+        events:
+            - httpApi:
+                path: /space_co2/data
+                method: GET
+
+    options_space_co2_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /space_co2/data
+                method: OPTIONS
+
+    ############################################SPACE_HUMIDITY##########################################################
+    store_space_humidity_data:
+        handler: handlers.space_humidity.store_space_humidity
+        events:
+            - httpApi:
+                path: /space_humidity/data
+                method: POST
+
+    get_space_humidity_data:
+        handler: handlers.space_humidity.get_space_humidity
+        events:
+            - httpApi:
+                path: /space_humidity/data
+                method: GET
+
+    options_space_humidity_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /space_humidity/data
+                method: OPTIONS
+
+    ############################################SPACE_TEMPERATURE#######################################################
+    store_space_temperature_data:
+        handler: handlers.space_temperature.store_space_temperature
+        events:
+            - httpApi:
+                path: /space_temperature/data
+                method: POST
+
+    get_space_temperature_data:
+        handler: handlers.space_temperature.get_space_temperature
+        events:
+            - httpApi:
+                path: /space_temperature/data
+                method: GET
+
+    options_space_temperature_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /space_temperature/data
+                method: OPTIONS
+
+    ############################################SUCTION_LINE_PRESSURE####################################################
+    store_suction_line_pressure_data:
+        handler: handlers.suction_line_pressure.store_suction_line_pressure
+        events:
+            - httpApi:
+                path: /suction_line_pressure/data
+                method: POST
+
+    get_suction_line_pressure_data:
+        handler: handlers.suction_line_pressure.get_suction_line_pressure
+        events:
+            - httpApi:
+                path: /suction_line_pressure/data
+                method: GET
+
+    options_suction_line_pressure_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /suction_line_pressure/data
+                method: OPTIONS
+
+    ############################################SUCTION_LINE_TEMPERATURE#################################################
+    store_suction_line_temperature_data:
+        handler: handlers.suction_line_temperature.store_suction_line_temperature
+        events:
+            - httpApi:
+                path: /suction_line_temperature/data
+                method: POST
+
+    get_suction_line_temperature_data:
+        handler: handlers.suction_line_temperature.get_suction_line_temperature
+        events:
+            - httpApi:
+                path: /suction_line_temperature/data
+                method: GET
+
+    options_suction_line_temperature_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /suction_line_temperature/data
+                method: OPTIONS
+
+    ############################################SUPPLY_AIR_CO2###########################################################
+    store_supply_air_co2_data:
+        handler: handlers.supply_air_co2.store_supply_air_co2
+        events:
+            - httpApi:
+                path: /supply_air_co2/data
+                method: POST
+
+    get_supply_air_co2_data:
+        handler: handlers.supply_air_co2.get_supply_air_co2
+        events:
+            - httpApi:
+                path: /supply_air_co2/data
+                method: GET
+
+    options_supply_air_co2_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /supply_air_co2/data
+                method: OPTIONS
+
+    ############################################SUPPLY_AIR_FAN_AMPS######################################################
+    store_supply_air_fan_amps_data:
+        handler: handlers.supply_air_fan_amps.store_supply_air_fan_amps
+        events:
+            - httpApi:
+                path: /supply_air_fan_amps/data
+                method: POST
+
+    get_supply_air_fan_amps_data:
+        handler: handlers.supply_air_fan_amps.get_supply_air_fan_amps
+        events:
+            - httpApi:
+                path: /supply_air_fan_amps/data
+                method: GET
+
+    options_supply_air_fan_amps_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /supply_air_fan_amps/data
+                method: OPTIONS
+
+    ############################################SUPPLY_AIR_HUMIDITY####################################################
+    store_supply_air_humidity_data:
+        handler: handlers.supply_air_humidity.store_supply_air_humidity
+        events:
+            - httpApi:
+                path: /supply_air_humidity/data
+                method: POST
+
+    get_supply_air_humidity_data:
+        handler: handlers.supply_air_humidity.get_supply_air_humidity
+        events:
+            - httpApi:
+                path: /supply_air_humidity/data
+                method: GET
+
+    options_supply_air_humidity_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /supply_air_humidity/data
+                method: OPTIONS
+
+    ############################################SUPPLY_AIR_TEMPERATURE#################################################
+    store_supply_air_temperature_data:
+        handler: handlers.supply_air_temperature.store_supply_air_temperature
+        events:
+            - httpApi:
+                path: /supply_air_temperature/data
+                method: POST
+
+    get_supply_air_temperature_data:
+        handler: handlers.supply_air_temperature.get_supply_air_temperature
+        events:
+            - httpApi:
+                path: /supply_air_temperature/data
+                method: GET
+
+    options_supply_air_temperature_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /supply_air_temperature/data
+                method: OPTIONS
+
+    ############################################VIBRATION_SENSOR########################################################
+    store_vibration_sensor_data:
+        handler: handlers.vibration_sensor.store_vibration_sensor
+        events:
+            - httpApi:
+                path: /vibration_sensor/data
+                method: POST
+
+    get_vibration_sensor_data:
+        handler: handlers.vibration_sensor.get_vibration_sensor
+        events:
+            - httpApi:
+                path: /vibration_sensor/data
+                method: GET
+
+    options_vibration_sensor_data:
+        handler: handlers.common.options_handler
+        events:
+            - httpApi:
+                path: /vibration_sensor/data
+                method: OPTIONS
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux

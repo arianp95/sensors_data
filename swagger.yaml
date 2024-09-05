@@ -1,0 +1,263 @@
+openapi: 3.0.0
+info:
+  title: Sensor Data API
+  description: API for storing and retrieving sensor data
+  version: 1.0.0
+servers:
+  - url: https://64mj5b817j.execute-api.us-east-2.amazonaws.com
+paths:
+  /sensor_vibration/data:
+    post:
+      summary: Store vibration data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VibrationData'
+      responses:
+        '200':
+          description: Data stored successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get vibration data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VibrationData'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /sensor_temperature/data:
+    post:
+      summary: Store temperature data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemperatureData'
+      responses:
+        '200':
+          description: Data stored successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get temperature data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemperatureData'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /sensor_status/data:
+    post:
+      summary: Store status data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusData'
+      responses:
+        '200':
+          description: Data stored successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get status data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatusData'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /sensor_amps/data:
+    post:
+      summary: Store amps data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmpsData'
+      responses:
+        '200':
+          description: Data stored successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get amps data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AmpsData'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /sensor_wind_direction/data:
+    post:
+      summary: Store wind direction data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WindDirectionData'
+      responses:
+        '200':
+          description: Data stored successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get wind direction data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WindDirectionData'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /log/data:
+    post:
+      summary: Store log data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogData'
+      responses:
+        '200':
+          description: Data stored successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    get:
+      summary: Get log data
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogData'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    VibrationData:
+      type: object
+      properties:
+        trend_flag:
+          type: string
+        status:
+          type: string
+        frequency:
+          type: integer
+        acceleration:
+          type: number
+        velocity:
+          type: number
+
+    TemperatureData:
+      type: object
+      properties:
+        trend_flag:
+          type: string
+        status:
+          type: string
+        temperature:
+          type: number
+
+    StatusData:
+      type: object
+      properties:
+        trend_flag:
+          type: string
+        status:
+          type: string
+        value:
+          type: string
+
+    AmpsData:
+      type: object
+      properties:
+        trend_flag:
+          type: string
+        status:
+          type: string
+        value:
+          type: number
+
+    WindDirectionData:
+      type: object
+      properties:
+        trend_flag:
+          type: string
+        status:
+          type: string
+        value:
+          type: string
+
+    LogData:
+      type: object
+      properties:
+        sensor:
+          type: string
+        log:
+          type: string
