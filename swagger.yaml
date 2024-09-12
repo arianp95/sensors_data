@@ -137,8 +137,6 @@ components:
       properties:
         timestamp:
           type: string
-          format: date-time
-          description: Format 'DD-MMM-YY HH:MM:SS AM/PM EDT'
         trend_flag:
           type: string
           enum: ['{start}', '{ }']

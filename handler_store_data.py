@@ -3,9 +3,11 @@ import json
 import os
 import re
 import time
+import pytz
 
 from botocore.config import Config
 from botocore.exceptions import ClientError
+from datetime import datetime
 from dotenv import load_dotenv
 from functools import wraps
 from typing import Any, Dict, List
@@ -78,8 +80,11 @@ def validate_input(body: Dict[str, Any], value_type: str) -> List[str]:
         if field not in body:
             errors.append(f"Missing required field: {field}")
 
-    if "timestamp" in body and not re.match(TIMESTAMP_PATTERN, body["timestamp"]):
-        errors.append("Invalid timestamp format. Expected format: 'DD-MMM-YY HH:MM:SS AM/PM EDT'")
+    if "timestamp" in body:
+        try:
+            int(body["timestamp"])
+        except ValueError:
+            errors.append("Invalid timestamp format.")
 
     if "trend_flag" in body and body["trend_flag"] not in TREND_FLAGS:
         errors.append("Invalid trend_flag. Must be '{start}' or '{ }'")
@@ -104,15 +109,29 @@ def validate_input(body: Dict[str, Any], value_type: str) -> List[str]:
 
     return errors
 
+def int_to_formatted_timestamp(timestamp):
+    # Convert integer timestamp to datetime object
+    dt = datetime.fromtimestamp(timestamp)
+
+    # Set the timezone to EDT
+    edt = pytz.timezone('US/Eastern')
+    dt_edt = dt.astimezone(edt)
+
+    # Format the datetime object
+    formatted_time = dt_edt.strftime("%d-%b-%y %I:%M:%S %p EDT")
+
+    return formatted_time
+
 def create_record(body: Dict[str, Any], sensor_name: str, value_type: str) -> Dict[str, Any]:
     current_time = int(time.time() * 1000)
+    timestamp_value = int_to_formatted_timestamp(int(body["timestamp"]))
 
     return {
         "Dimensions": [{"Name": "region", "Value": "us-east-2"}],
         "MeasureName": sensor_name,
         "MeasureValueType": "MULTI",
         "MeasureValues": [
-            {"Name": "timestamp", "Value": body["timestamp"], "Type": "VARCHAR"},
+            {"Name": "timestamp", "Value": timestamp_value, "Type": "VARCHAR"},
             {"Name": "trend_flag", "Value": body["trend_flag"], "Type": "VARCHAR"},
             {"Name": "zone_id", "Value": body["zone_id"], "Type": "VARCHAR"},
             {"Name": "building_id", "Value": body["building_id"], "Type": "VARCHAR"},
