@@ -7,6 +7,8 @@ provider:
   runtime: python3.12
   region: ${env:AWS_REGION, 'us-east-2'}
   stage: ${opt:stage, 'develop'}
+  httpApi:
+    cors: true
   environment:
     DATABASE_NAME: ${env:DATABASE_NAME}
     API_KEY: ${env:API_KEY}
