@@ -1,29 +1,80 @@
 openapi: 3.0.0
 info:
-  title: Sensor Data API
-  description: API for storing and retrieving sensor data
+  title: SDCS API
+  description: API for storing and retrieving sensor data for SDCS
   version: 1.0.0
 servers:
-  - url: https://64mj5b817j.execute-api.us-east-2.amazonaws.com
+  - url: https://wajhhqp2zk.execute-api.us-east-2.amazonaws.com
 paths:
-  /sensor_vibration/data:
+  /sdcs/{sensor_type}/data:
     post:
-      summary: Store vibration data
+      summary: Store sensor data
+      parameters:
+        - in: path
+          name: sensor_type
+          required: true
+          schema:
+            type: string
+            enum:
+              - compressor_amps
+              - cond_fan_amps
+              - liquid_line_pressure
+              - liquid_line_temperature
+              - return_air_co2
+              - return_air_humidity
+              - return_air_temperature
+              - space_co2
+              - space_humidity
+              - space_temperature
+              - suction_line_pressure
+              - suction_line_temperature
+              - supply_air_co2
+              - supply_air_fan_amps
+              - supply_air_humidity
+              - supply_air_temperature
+              - vibration_sensor
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VibrationData'
+              $ref: '#/components/schemas/SensorData'
       responses:
         '200':
           description: Data stored successfully
         '400':
           description: Bad request
+        '403':
+          description: Forbidden - Invalid API Key
         '500':
           description: Internal server error
     get:
-      summary: Get vibration data
+      summary: Get sensor data
+      parameters:
+        - in: path
+          name: sensor_type
+          required: true
+          schema:
+            type: string
+            enum:
+              - compressor_amps
+              - cond_fan_amps
+              - liquid_line_pressure
+              - liquid_line_temperature
+              - return_air_co2
+              - return_air_humidity
+              - return_air_temperature
+              - space_co2
+              - space_humidity
+              - space_temperature
+              - suction_line_pressure
+              - suction_line_temperature
+              - supply_air_co2
+              - supply_air_fan_amps
+              - supply_air_humidity
+              - supply_air_temperature
+              - vibration_sensor
+              - log_data
       responses:
         '200':
           description: Successful response
@@ -32,232 +83,82 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VibrationData'
+                  $ref: '#/components/schemas/SensorData'
         '400':
           description: Bad request
+        '403':
+          description: Forbidden - Invalid API Key
         '500':
           description: Internal server error
 
-  /sensor_temperature/data:
-    post:
-      summary: Store temperature data
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TemperatureData'
-      responses:
-        '200':
-          description: Data stored successfully
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get temperature data
+    options:
+      summary: Options sensor data
+      parameters:
+        - in: path
+          name: sensor_type
+          required: true
+          schema:
+            type: string
+            enum:
+              - compressor_amps
+              - cond_fan_amps
+              - liquid_line_pressure
+              - liquid_line_temperature
+              - return_air_co2
+              - return_air_humidity
+              - return_air_temperature
+              - space_co2
+              - space_humidity
+              - space_temperature
+              - suction_line_pressure
+              - suction_line_temperature
+              - supply_air_co2
+              - supply_air_fan_amps
+              - supply_air_humidity
+              - supply_air_temperature
+              - vibration_sensor
+              - log_data
       responses:
         '200':
           description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TemperatureData'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
 
-  /sensor_status/data:
-    post:
-      summary: Store status data
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StatusData'
-      responses:
-        '200':
-          description: Data stored successfully
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get status data
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StatusData'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-
-  /sensor_amps/data:
-    post:
-      summary: Store amps data
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AmpsData'
-      responses:
-        '200':
-          description: Data stored successfully
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get amps data
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AmpsData'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-
-  /sensor_wind_direction/data:
-    post:
-      summary: Store wind direction data
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WindDirectionData'
-      responses:
-        '200':
-          description: Data stored successfully
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get wind direction data
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/WindDirectionData'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-
-  /log/data:
-    post:
-      summary: Store log data
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LogData'
-      responses:
-        '200':
-          description: Data stored successfully
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-    get:
-      summary: Get log data
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/LogData'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
 
 components:
   schemas:
-    VibrationData:
+    SensorData:
       type: object
+      required:
+        - timestamp
+        - trend_flag
+        - zone_id
+        - building_id
+        - status
+        - value
       properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Format 'DD-MMM-YY HH:MM:SS AM/PM EDT'
         trend_flag:
+          type: string
+          enum: ['{start}', '{ }']
+        zone_id:
+          type: string
+        building_id:
           type: string
         status:
           type: string
-        frequency:
-          type: integer
-        acceleration:
-          type: number
-        velocity:
-          type: number
-
-    TemperatureData:
-      type: object
-      properties:
-        trend_flag:
-          type: string
-        status:
-          type: string
-        temperature:
-          type: number
-
-    StatusData:
-      type: object
-      properties:
-        trend_flag:
-          type: string
-        status:
-          type: string
+          enum: ['{ok}', '{fail}']
         value:
-          type: string
+          oneOf:
+            - type: number
+            - type: string
 
-    AmpsData:
-      type: object
-      properties:
-        trend_flag:
-          type: string
-        status:
-          type: string
-        value:
-          type: number
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
 
-    WindDirectionData:
-      type: object
-      properties:
-        trend_flag:
-          type: string
-        status:
-          type: string
-        value:
-          type: string
-
-    LogData:
-      type: object
-      properties:
-        sensor:
-          type: string
-        log:
-          type: string
+security:
+  - ApiKeyAuth: []
