@@ -8,7 +8,20 @@ provider:
   region: ${env:AWS_REGION, 'us-east-2'}
   stage: ${opt:stage, 'develop'}
   httpApi:
-    cors: true
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+        - X-Amz-User-Agent
+      allowedMethods:
+        - OPTIONS
+        - GET
+        - POST
   environment:
     DATABASE_NAME: ${env:DATABASE_NAME}
     API_KEY: ${env:API_KEY}
@@ -78,12 +91,6 @@ functions:
           path: /sdcs/compressor_amps/data
           method: GET
 
-  options_compressor_amps_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/compressor_amps/data
-          method: OPTIONS
 
   ############################################COND_FAN_AMPS#############################################################
   store_cond_fan_amps_data:
@@ -100,12 +107,6 @@ functions:
           path: /sdcs/cond_fan_amps/data
           method: GET
 
-  options_cond_fan_amps_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/cond_fan_amps/data
-          method: OPTIONS
 
   ############################################LIQUID_LINE_PRESSURE######################################################
   store_liquid_line_pressure_data:
@@ -122,12 +123,6 @@ functions:
           path: /sdcs/liquid_line_pressure/data
           method: GET
 
-  options_liquid_line_pressure_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/liquid_line_pressure/data
-          method: OPTIONS
 
   ############################################LIQUID_LINE_TEMPERATURE###################################################
   store_liquid_line_temperature_data:
@@ -144,12 +139,6 @@ functions:
           path: /sdcs/liquid_line_temperature/data
           method: GET
 
-  options_liquid_line_temperature_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/liquid_line_temperature/data
-          method: OPTIONS
 
   ############################################LOG_DATA##################################################################
   get_logging_data:
@@ -159,12 +148,6 @@ functions:
           path: /sdcs/log_data/data
           method: GET
 
-  options_logging_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/log_data/data
-          method: OPTIONS
 
   ############################################RETURN_AIR_CO2##########################################################
   store_return_air_co2_data:
@@ -181,12 +164,6 @@ functions:
           path: /sdcs/return_air_co2/data
           method: GET
 
-  options_return_air_co2_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/return_air_co2/data
-          method: OPTIONS
 
   ############################################RETURN_AIR_HUMIDITY######################################################
   store_return_air_humidity_data:
@@ -203,12 +180,6 @@ functions:
           path: /sdcs/return_air_humidity/data
           method: GET
 
-  options_return_air_humidity_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/return_air_humidity/data
-          method: OPTIONS
 
   ############################################RETURN_AIR_TEMPERATURE##################################################
   store_return_air_temperature_data:
@@ -225,12 +196,6 @@ functions:
           path: /sdcs/return_air_temperature/data
           method: GET
 
-  options_return_air_temperature_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/return_air_temperature/data
-          method: OPTIONS
 
   ############################################SPACE_CO2###############################################################
   store_space_co2_data:
@@ -247,13 +212,6 @@ functions:
           path: /sdcs/space_co2/data
           method: GET
 
-  options_space_co2_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/space_co2/data
-          method: OPTIONS
-
   ############################################SPACE_HUMIDITY##########################################################
   store_space_humidity_data:
     handler: handler_store_data.store_space_humidity
@@ -269,12 +227,6 @@ functions:
           path: /sdcs/space_humidity/data
           method: GET
 
-  options_space_humidity_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/space_humidity/data
-          method: OPTIONS
 
   ############################################SPACE_TEMPERATURE#######################################################
   store_space_temperature_data:
@@ -291,12 +243,6 @@ functions:
           path: /sdcs/space_temperature/data
           method: GET
 
-  options_space_temperature_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/space_temperature/data
-          method: OPTIONS
 
   ############################################SUCTION_LINE_PRESSURE####################################################
   store_suction_line_pressure_data:
@@ -313,12 +259,6 @@ functions:
           path: /sdcs/suction_line_pressure/data
           method: GET
 
-  options_suction_line_pressure_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/suction_line_pressure/data
-          method: OPTIONS
 
   ############################################SUCTION_LINE_TEMPERATURE#################################################
   store_suction_line_temperature_data:
@@ -335,12 +275,6 @@ functions:
           path: /sdcs/suction_line_temperature/data
           method: GET
 
-  options_suction_line_temperature_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/suction_line_temperature/data
-          method: OPTIONS
 
   ############################################SUPPLY_AIR_CO2###########################################################
   store_supply_air_co2_data:
@@ -357,12 +291,6 @@ functions:
           path: /sdcs/supply_air_co2/data
           method: GET
 
-  options_supply_air_co2_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/supply_air_co2/data
-          method: OPTIONS
 
   ############################################SUPPLY_AIR_FAN_AMPS######################################################
   store_supply_air_fan_amps_data:
@@ -379,12 +307,6 @@ functions:
           path: /sdcs/supply_air_fan_amps/data
           method: GET
 
-  options_supply_air_fan_amps_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/supply_air_fan_amps/data
-          method: OPTIONS
 
   ############################################SUPPLY_AIR_HUMIDITY####################################################
   store_supply_air_humidity_data:
@@ -401,12 +323,6 @@ functions:
           path: /sdcs/supply_air_humidity/data
           method: GET
 
-  options_supply_air_humidity_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/supply_air_humidity/data
-          method: OPTIONS
 
   ############################################SUPPLY_AIR_TEMPERATURE#################################################
   store_supply_air_temperature_data:
@@ -423,12 +339,6 @@ functions:
           path: /sdcs/supply_air_temperature/data
           method: GET
 
-  options_supply_air_temperature_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/supply_air_temperature/data
-          method: OPTIONS
 
   ############################################VIBRATION_SENSOR########################################################
   store_vibration_sensor_data:
@@ -445,12 +355,6 @@ functions:
           path: /sdcs/vibration_sensor/data
           method: GET
 
-  options_vibration_sensor_data:
-    handler: handler_store_data.options_handler
-    events:
-      - httpApi:
-          path: /sdcs/vibration_sensor/data
-          method: OPTIONS
 
 
 plugins:
@@ -458,10 +362,6 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
-  #  scripts:
-  #    hooks:
-  #      'before:deploy:deploy':
-  #        - python -c "import os; os.environ['STAGE'] = '${opt:stage, 'develop'}'; exec(open('create_database.py').read())"
 
   pythonRequirements:
     dockerizePip: non-linux

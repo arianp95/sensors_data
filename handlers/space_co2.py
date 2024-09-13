@@ -1,7 +1,0 @@
-from helpers import store_data, get_data
-
-def store_space_co2(event, context):
-    return store_data(event, context, 'SpaceCO2', 'space_co2', "DOUBLE")
-
-def get_space_co2(event, context):
-    return get_data(event, context, 'SpaceCO2')

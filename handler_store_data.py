@@ -1,7 +1,6 @@
 import boto3
 import json
 import os
-import re
 import time
 import pytz
 
@@ -47,9 +46,6 @@ timestream_query = boto3.client("timestream-query", config=config)
 
 headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
 }
 
 TIMESTAMP_PATTERN = r"\d{2}-[A-Za-z]{3}-\d{2} \d{2}:\d{2}:\d{2} [AP]M EDT"
@@ -111,7 +107,7 @@ def validate_input(body: Dict[str, Any], value_type: str) -> List[str]:
 
 def int_to_formatted_timestamp(timestamp):
     # Convert integer timestamp to datetime object
-    dt = datetime.fromtimestamp(timestamp)
+    dt = datetime.fromtimestamp(timestamp / 1000)
 
     # Set the timezone to EDT
     edt = pytz.timezone('US/Eastern')
@@ -161,17 +157,29 @@ def generic_store_data(event, context, table_name, value_type):
                 TableName=tables_names[table_name],
                 Records=[record],
             )
-            return {"statusCode": 200, "body": json.dumps("Data stored successfully"), "headers": headers}
+            return {
+                "statusCode": 200,
+                "body": json.dumps("Data stored successfully"),
+                "headers": headers
+            }
         except ClientError as e:
             if e.response["Error"]["Code"] == "RejectedRecordsException":
                 rejected_records = e.response["RejectedRecords"]
                 error_message = f"Some records were rejected. Details: {json.dumps(rejected_records)}"
-                return {"statusCode": 400, "body": json.dumps(error_message), "headers": headers}
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps(error_message),
+                    # "headers": headers
+                }
             else:
                 raise
 
     except Exception as e:
-        return {"statusCode": 500, "body": json.dumps(f"Error: {str(e)}"), "headers": headers}
+        return {
+            "statusCode": 500,
+            "body": json.dumps(f"Error: {str(e)}"),
+            "headers": headers
+        }
 
 @require_api_key
 def store_compressor_amps(event, context):
