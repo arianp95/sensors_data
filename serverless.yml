@@ -230,7 +230,7 @@ functions:
 
   ############################################SPACE_TEMPERATURE#######################################################
   store_space_temperature_data:
-    handler: handlers.space_temperature.store_space_temperature
+    handler: handler_store_data.store_space_temperature
     events:
       - httpApi:
           path: /sdcs/space_temperature/data
